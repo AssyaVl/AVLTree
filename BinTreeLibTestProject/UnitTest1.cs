@@ -118,7 +118,7 @@ namespace BinTreeLibTestProject
                 tree.Add(i, i);
             }
             tree[n] = n;
-            Assert.True(tree.ContainsKey(n) );
+            Assert.True(tree.ContainsKey(n));
             Assert.True(tree.ContainsValue(n));
         }
         [Fact]
@@ -131,13 +131,38 @@ namespace BinTreeLibTestProject
         public void IsBalanced()
         {
             var tree = new AVLTree<int, int>();
-            int n = 127;
-            int expectedHeight = 7;
+            var expectedHeight = 1;
+            // добавляем постепенно элементы до 2**k - 1 и проверяем высоту
+            for (int n = 2; n < 257; n *= 2)
+            {
+                var numOfElems = n - 1;
+                for (int elem = n / 2; elem <= numOfElems; elem++)
+                {
+                    tree.Add(elem, 0);
+                }
+                Assert.Equal(tree.Height, expectedHeight);
+                expectedHeight++;
+            }
+        }
+        [Fact]
+        public void IsRemovingCorrectly()
+        {
+            var tree = new AVLTree<int, int>();
+            int n = 10;
             for (int i = 0; i < n; i++)
             {
                 tree.Add(i, 0);
             }
-            Assert.Equal(tree.Height, 7);
+            for (int deletingElement = 0; deletingElement < n; deletingElement++)
+            {
+                tree.Remove(deletingElement);
+                Assert.False(tree.ContainsKey(deletingElement));
+            }
+        }
+        [Fact]
+        public void PRIKOL()
+        {
+            Assert.True(true);
         }
     }
 }

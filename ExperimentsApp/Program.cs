@@ -30,6 +30,12 @@ public class Program
             }
         }
 
+        #region Starting up
+        avltree.Add(1, 0);
+        avltree.ContainsKey(1);
+        avltree.Remove(1);
+        #endregion
+
         #region AVL Tree
 
         Console.WriteLine("AVLTree Insert");

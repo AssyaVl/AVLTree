@@ -23,7 +23,13 @@ namespace BinTreeLib
         /// <summary>
         /// Высота дерева
         /// </summary>
-        public int Height => _root.Height;
+        public int Height
+        {
+            get
+            {
+                return _root.Height;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -92,26 +98,18 @@ namespace BinTreeLib
         /// <exception cref="ArgumentException"></exception>
         public void Remove(TKey key)
         {
-            // ищем удаляемый элемент
-            var removingNode = Find(key);
-            // если не нашли
-            if (removingNode == null)
-            {
-                throw new ArgumentException("Such key does not exist ! ! !");
-            }
-
-
-            //почему я закоментила? я короче почитала тот сайт и там сказано что
-            //метод удаления в процессе и ищет еще, так что find тут не нужен по идее :)
-
-
             _root = Remove(_root, key);
             if (_root != null)
             {
                 _root = Rebalancing(_root); // Балансировка корня
             }
         }
-        //удаление рекурсивно
+        /// <summary>
+        /// Рекурсивное удаление узла по ключу
+        /// </summary>
+        /// <param name="node">Узел, с которого ищем узел для удаления</param>
+        /// <param name="key">Ключ, по которому ищем узел</param>
+        /// <returns></returns>
         private Node<TKey, TValue> Remove(Node<TKey, TValue> node, TKey key)
         {
             if (node == null)
@@ -148,14 +146,22 @@ namespace BinTreeLib
             node.UpdateHeight();
             return Rebalancing(node);
         }
-        //ищем минимальный элемент
+        /// <summary>
+        /// Поиск минимального узла дерева (самое левое)
+        /// </summary>
+        /// <param name="node">Узел, с которого ведём поиск</param>
+        /// <returns></returns>
         private Node<TKey, TValue> FindMin(Node<TKey, TValue> node)
         {
             while (node.Left != null)
                 node = node.Left;
             return node;
         }
-        //удаляем минимальный элемент
+        /// <summary>
+        /// Удаление минимального элемента
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Node<TKey, TValue> RemoveMin(Node<TKey, TValue> node)
         {
             if (node.Left == null)
@@ -238,13 +244,21 @@ namespace BinTreeLib
             leftNode.UpdateHeight();
             return leftNode;
         }
-        //левый-правый поворот
+        /// <summary>
+        /// Левый-правый поворот
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Node<TKey, TValue> LeftRightRotation(Node<TKey, TValue> node)
         {
             node.Left = LeftRotation(node.Left);
             return RightRotation(node);
         }
-        //правый-левый поворот
+        /// <summary>
+        /// Правый-левый поворот
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Node<TKey, TValue> RightLeftRotation(Node<TKey, TValue> node)
         {
             node.Right = RightRotation(node.Right);
