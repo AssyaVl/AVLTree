@@ -53,62 +53,33 @@ namespace BinTreeLib
         /// <exception cref="ArgumentException"></exception>
         public void Add(TKey key, TValue value)
         {
-            var node = new Node<TKey, TValue>(key, value);
-            if (_root == null)
-            {
-                _root = node;
-                Count++;
-                return;
-            }
-            var current = _root;
-            var parent = _root;
-            int result;
-            while (current != null)
-            {
-                parent = current;
-                result = _comparer.Compare(current.Key, node.Key);
-                // если новый узел равен текущему
-                if (result == 0)
-                {
-                    throw new ArgumentException("Such key is already added ! ! !");
-                }
-                // если меньше текущего
-                if (result > 0)
-                {
-                    current = current.Left;
-                    continue;
-                }
-                // если больше текущего
-                current = current.Right;
-            }
-            result = _comparer.Compare(parent.Key, node.Key);
-            if (result > 0)
-            {
-                parent.Left = node;
-            }
-            if (result < 0)
-            {
-                parent.Right = node;
-            }
-            node.Parent = parent;
+            _root = Add(_root, key, value);
             Count++;
-            UpdateHeights(node.Parent);
-            // ДОПИСАТЬ:
-            // 1. Балансировка дерева
-            _root = Rebalancing(_root);
-
         }
-        /// <summary>
-        /// Пересчёт высот до корня дерева
-        /// </summary>
-        /// <param name="node">Вершина, с которой начинается пересчёт</param>
-        private void UpdateHeights(Node<TKey, TValue> node)
+
+        private Node<TKey,TValue> Add(Node<TKey,TValue> node, TKey key, TValue value)
         {
-            while (node != null)
+            if (node == null)
             {
-                node.UpdateHeight();
-                node = node.Parent;
+                return new Node<TKey, TValue>(key, value);
             }
+
+            int compareResult = _comparer.Compare(key, node.Key);
+            if (compareResult < 0)
+            {
+                node.Left = Add(node.Left, key, value);
+            }
+            else if (compareResult > 0)
+            {
+                node.Right = Add(node.Right, key, value);
+            }
+            else
+            {
+                throw new ArgumentException("Such key is already added!");
+            }
+
+            node.UpdateHeight();
+            return Rebalancing(node);
         }
         /// <summary>
         /// Удаление элемента из дерева по ключу
@@ -207,9 +178,6 @@ namespace BinTreeLib
 
             if (node == null)
                 return null;
-
-            // Обновляем высоту текущего узла
-            node.UpdateHeight();
 
             // Получаем баланс-фактор
             int balanceFactor = node.BalanceFactor();
