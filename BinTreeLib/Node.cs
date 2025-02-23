@@ -5,17 +5,17 @@
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    internal class Node<TKey, TValue>
+    public class Node<TKey, TValue>
     {
-        #region 
+        #region Properties
         /// <summary>
         /// Ключ
         /// </summary>
-        public TKey Key { get; set; }
+        public TKey Key { get; internal set; }
         /// <summary>
         /// Значение по ключу
         /// </summary>
-        public TValue Value { get; set; }
+        public TValue Value { get; internal set; }
         /// <summary>
         /// Левое поддерево
         /// </summary>

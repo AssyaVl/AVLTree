@@ -127,5 +127,17 @@ namespace BinTreeLibTestProject
             var tree = new AVLTree<string, int>();
             Assert.Throws<ArgumentNullException>(() => tree[null]=6);
         }
+        [Fact]
+        public void IsBalanced()
+        {
+            var tree = new AVLTree<int, int>();
+            int n = 127;
+            int expectedHeight = 7;
+            for (int i = 0; i < n; i++)
+            {
+                tree.Add(i, 0);
+            }
+            Assert.Equal(tree.Height, 7);
+        }
     }
 }

@@ -6,8 +6,8 @@ namespace BinTreeLib
     /// <summary>
     /// АВЛ-Дерево
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
+    /// <typeparam name="TKey">Ключ узла</typeparam>
+    /// <typeparam name="TValue">Значение узла по ключу</typeparam>
     public class AVLTree<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> 
     {
         #region Fields
@@ -20,6 +20,10 @@ namespace BinTreeLib
         /// Количество узлов в дереве
         /// </summary>
         public int Count { get; private set; }
+        /// <summary>
+        /// Высота дерева
+        /// </summary>
+        public int Height => _root.Height;
         #endregion
 
         #region Constructors
@@ -88,13 +92,13 @@ namespace BinTreeLib
         /// <exception cref="ArgumentException"></exception>
         public void Remove(TKey key)
         {
-            //// ищем удаляемый элемент
-            //var removingNode = Find(key);
-            //// если не нашли
-            //if (removingNode == null)
-            //{
-            //    throw new ArgumentException("Such key does not exist ! ! !");
-            //}
+            // ищем удаляемый элемент
+            var removingNode = Find(key);
+            // если не нашли
+            if (removingNode == null)
+            {
+                throw new ArgumentException("Such key does not exist ! ! !");
+            }
 
 
             //почему я закоментила? я короче почитала тот сайт и там сказано что
@@ -185,7 +189,7 @@ namespace BinTreeLib
             // Левый поворот
             if (balanceFactor > 1)
             {
-                // Левый-левый поворот
+                // Правый поворот
                 if (node.Left.BalanceFactor() >= 0)
                     return RightRotation(node);
                 // Левый-правый поворот
@@ -196,7 +200,7 @@ namespace BinTreeLib
             // Правый поворот
             if (balanceFactor < -1)
             {
-                // Правый-правый поворот
+                // Левый поворот
                 if (node.Right.BalanceFactor() <= 0)
                     return LeftRotation(node);
                 // Правый-левый поворот
