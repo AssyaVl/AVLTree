@@ -30,6 +30,7 @@ public class Program
             }
         }
 
+        #region AVL Tree
 
         Console.WriteLine("AVLTree Insert");
 
@@ -58,7 +59,7 @@ public class Program
 
         Console.WriteLine("\n============\n");
 
-        Console.WriteLine("AVLTree CHECK");
+        Console.WriteLine("AVLTree Contains");
 
         watch.Restart();
         // Поиск всех элементов в AVLTree
@@ -71,9 +72,9 @@ public class Program
 
         Console.WriteLine("\n============\n");
 
+        #endregion
 
-
-
+        #region Sorted Dictionary
 
         Console.WriteLine("SortedDictionary Insert");
 
@@ -102,7 +103,7 @@ public class Program
 
         Console.WriteLine("\n============\n");
 
-        Console.WriteLine("SortedDictionary CHECK");
+        Console.WriteLine("SortedDictionary Contains");
 
         watch.Restart();
         // Поиск всех элементов в AVLTree
@@ -115,5 +116,6 @@ public class Program
 
         Console.WriteLine("\n============\n");
 
+        #endregion
     }
 }
