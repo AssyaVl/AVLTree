@@ -95,6 +95,8 @@ namespace BinTreeLib
             UpdateHeights(node.Parent);
             // ДОПИСАТЬ:
             // 1. Балансировка дерева
+            _root = Rebalancing(_root);
+
         }
         /// <summary>
         /// Пересчёт высот до корня дерева
@@ -115,26 +117,126 @@ namespace BinTreeLib
         /// <exception cref="ArgumentException"></exception>
         public void Remove(TKey key)
         {
-            // ищем удаляемый элемент
-            var removingNode = Find(key);
-            // если не нашли
-            if (removingNode == null)
+            //// ищем удаляемый элемент
+            //var removingNode = Find(key);
+            //// если не нашли
+            //if (removingNode == null)
+            //{
+            //    throw new ArgumentException("Such key does not exist ! ! !");
+            //}
+
+
+            //почему я закоментила? я короче почитала тот сайт и там сказано что
+            //метод удаления в процессе и ищет еще, так что find тут не нужен по идее :)
+
+
+            _root = Remove(_root, key);
+            if (_root != null)
             {
-                throw new ArgumentException("Such key does not exist ! ! !");
+                _root = Rebalancing(_root); // Балансировка корня
             }
-            // ДОПИСАТЬ:
-            // 1. Удаление найденного элемента
-            // 2. Обновление высот
-            // 3. Балансировка дерева
+        }
+        //удаление рекурсивно
+        private Node<TKey, TValue> Remove(Node<TKey, TValue> node, TKey key)
+        {
+            if (node == null)
+                return null; //узел не найден
+
+            int compareResult = _comparer.Compare(key, node.Key);
+
+            // Ищем узел для удаления
+            if (compareResult < 0)
+                node.Left = Remove(node.Left, key);
+            else if (compareResult > 0)
+                node.Right = Remove(node.Right, key);
+            else
+            {
+                // Узел найден
+                if (node.Right == null)
+                {
+                    // Если нет правого поддерева, заменяем на левое поддерево
+                    Count--;
+                    return node.Left;
+                }
+
+                // Находим минимальный узел в правом поддереве
+                Node<TKey, TValue> minNode = FindMin(node.Right);
+                // Удаляем минимальный узел из правого поддерева
+                minNode.Right = RemoveMin(node.Right);
+                // Подвешиваем левое поддерево удаляемого узла к минимальному узлу
+                minNode.Left = node.Left;
+                // Заменяем удаляемый узел на минимальный узел
+                node = minNode;
+                Count--;
+            }
+            // Обновляем высоту и балансируем дерево
+            node.UpdateHeight();
+            return Rebalancing(node);
+        }
+        //ищем минимальный элемент
+        private Node<TKey, TValue> FindMin(Node<TKey, TValue> node)
+        {
+            while (node.Left != null)
+                node = node.Left;
+            return node;
+        }
+        //удаляем минимальный элемент
+        private Node<TKey, TValue> RemoveMin(Node<TKey, TValue> node)
+        {
+            if (node.Left == null)
+            {
+                // Если левого поддерева нет, возвращаем правое поддерево
+                return node.Right;
+            }
+
+            // Рекурсивно удаляем минимальный узел
+            node.Left = RemoveMin(node.Left);
+
+            // Обновляем высоту и балансируем дерево
+            node.UpdateHeight();
+            return Rebalancing(node);
         }
         /// <summary>
         /// Балансировка АВЛ-дерева
         /// </summary>
         /// <param name="node">Узел, с которого проверяем балансировку</param>
-        private void Rebalancing(Node<TKey, TValue> node)
+        private Node<TKey, TValue> Rebalancing(Node<TKey, TValue> node)
         {
             // определение баланса поддеревьев и выполнение поворотов
             // у класса Node есть метод BalanceFactor()
+
+            if (node == null)
+                return null;
+
+            // Обновляем высоту текущего узла
+            node.UpdateHeight();
+
+            // Получаем баланс-фактор
+            int balanceFactor = node.BalanceFactor();
+
+            // Левый поворот
+            if (balanceFactor > 1)
+            {
+                // Левый-левый поворот
+                if (node.Left.BalanceFactor() >= 0)
+                    return RightRotation(node);
+                // Левый-правый поворот
+                else
+                    return LeftRightRotation(node);
+            }
+
+            // Правый поворот
+            if (balanceFactor < -1)
+            {
+                // Правый-правый поворот
+                if (node.Right.BalanceFactor() <= 0)
+                    return LeftRotation(node);
+                // Правый-левый поворот
+                else
+                    return RightLeftRotation(node);
+            }
+
+            return node;
         }
         /// <summary>
         /// Левый поворот узла
@@ -163,6 +265,18 @@ namespace BinTreeLib
             node.UpdateHeight();
             leftNode.UpdateHeight();
             return leftNode;
+        }
+        //левый-правый поворот
+        private Node<TKey, TValue> LeftRightRotation(Node<TKey, TValue> node)
+        {
+            node.Left = LeftRotation(node.Left);
+            return RightRotation(node);
+        }
+        //правый-левый поворот
+        private Node<TKey, TValue> RightLeftRotation(Node<TKey, TValue> node)
+        {
+            node.Right = RightRotation(node.Right);
+            return LeftRotation(node);
         }
         /// <summary>
         /// Проверяет наличие узла по ключу
