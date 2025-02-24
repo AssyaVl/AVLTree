@@ -5,7 +5,7 @@
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class Node<TKey, TValue>
+    internal class Node<TKey, TValue>
     {
         #region Properties
         /// <summary>

@@ -265,6 +265,19 @@ namespace BinTreeLib
             return LeftRotation(node);
         }
         /// <summary>
+        /// Поиск максимального элемента дерева
+        /// </summary>
+        /// <returns>Максимальный элемент дерева</returns>
+        public TValue FindMax()
+        {
+            var node = _root;
+            while (node.Right != null)
+            {
+                node = node.Right;
+            }
+            return node.Value;
+        }
+        /// <summary>
         /// Проверяет наличие узла по ключу
         /// </summary>
         /// <param name="key">Ключ, по которому проверяется наличие</param>
@@ -369,12 +382,32 @@ namespace BinTreeLib
             return nodes;
         }
         /// <summary>
-        /// Симметричный обхолд дерева от корня
+        /// Симметричный рекурсивный обхолд дерева от корня
         /// </summary>
         /// <returns></returns>
         public IEnumerable<KeyValuePair<TKey, TValue>> Traverse()
         {
             return Traverse(_root);
+        }
+        public IEnumerable<KeyValuePair<TKey, TValue>> NonRecursuveTraverse()
+        {
+            var nodes = new List<KeyValuePair<TKey, TValue>>();
+            var stack = new Stack<Node<TKey, TValue>>();
+            var current = _root;
+
+            while (current != null || stack.Count > 0)
+            {
+                while (current != null)
+                {
+                    stack.Push(current);
+                    current = current.Left;
+                }
+                current = stack.Pop();
+                nodes.Add(new KeyValuePair<TKey, TValue>(current.Key, current.Value));
+                current = current.Right;
+            }
+
+            return nodes;
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
