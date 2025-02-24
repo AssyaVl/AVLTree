@@ -270,7 +270,7 @@ namespace BinTreeLib
         /// <returns>Максимальный элемент дерева</returns>
         public TValue FindMax()
         {
-            var node = _root;
+            var node = _root != null ? _root : throw new ArgumentException("Tree is empty !");
             while (node.Right != null)
             {
                 node = node.Right;
@@ -389,6 +389,10 @@ namespace BinTreeLib
         {
             return Traverse(_root);
         }
+        /// <summary>
+        /// Симметричный нерекурсивный обход дерева от корня
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<KeyValuePair<TKey, TValue>> NonRecursuveTraverse()
         {
             var nodes = new List<KeyValuePair<TKey, TValue>>();
