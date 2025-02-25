@@ -9,4 +9,4 @@
 ## Запуск
 + Скачать и установить актуальную версию .NET
 + Скачать исходный код
-+ Запустить исполняемый файл  `ExperimentsApp.exe`, находящийся в директории `\ExperimentsApp\bin\Debug\net6.0`
++ Запустить исполняемый файл  `ExperimentsApp.exe`, находящийся в директории `\ExperimentsApp\bin\Release\net6.0`
